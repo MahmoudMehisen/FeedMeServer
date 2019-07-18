@@ -26,6 +26,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
 import foodOreder.feedMeServer.Common.Common;
+import foodOreder.feedMeServer.Interface.ItemClickListener;
+import foodOreder.feedMeServer.Model.Category;
+import foodOreder.feedMeServer.ViewHolder.MenuViewHolder;
 
 public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -35,6 +38,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     TextView txtFullName;
     RecyclerView recycler_menu;
     RecyclerView.LayoutManager layoutManager;
+    FirebaseRecyclerAdapter<Category, MenuViewHolder> adapter;
+    FirebaseRecyclerOptions<Category> options;
 
 
     @Override
@@ -42,7 +47,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("Menu Management");
+        toolbar.setTitle("Menu");
         setSupportActionBar(toolbar);
 
         //Init Firebase
@@ -66,9 +71,48 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         txtFullName.setText(Common.CommonUser.getName());
 
 
+        //Load Menu
+        recycler_menu = (RecyclerView) findViewById(R.id.recycler_menu);
+        recycler_menu.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(this);
+        recycler_menu.setLayoutManager(layoutManager);
 
+
+
+        loadMenu();
     }
 
+    private void loadMenu() {
+
+        options = new FirebaseRecyclerOptions.Builder<Category>()
+                .setQuery(category, Category.class)
+                .build();
+
+        adapter = new FirebaseRecyclerAdapter<Category, MenuViewHolder>(options) {
+            @NonNull
+            @Override
+            public MenuViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+                View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.menu_item, viewGroup, false);
+                return new MenuViewHolder(view);
+            }
+
+            @Override
+            protected void onBindViewHolder(@NonNull MenuViewHolder holder, int position, @NonNull Category model) {
+                holder.txtMenuName.setText(model.getName());
+                Picasso.with(getApplicationContext()).load(model.getImage())
+                        .into(holder.imageView);
+                final Category clickItem = model;
+                holder.setItemClickListener(new ItemClickListener() {
+                    @Override
+                    public void onClick(View view, int position, boolean isLongClick) {
+
+                    }
+                });
+            }
+        };
+        recycler_menu.setAdapter(adapter);
+        adapter.startListening();
+    }
 
     @Override
     public void onBackPressed() {
@@ -97,6 +141,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
