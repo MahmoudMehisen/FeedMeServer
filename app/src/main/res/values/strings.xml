@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Feed Me</string>
+    <string name="app_name">Feed Me Service</string>
     <string name="slogan">Order Food Now</string>
     <string name="singIn">Sign In</string>
     <string name="singUp">Sign Up</string>
