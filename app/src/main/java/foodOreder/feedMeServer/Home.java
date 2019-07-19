@@ -73,6 +73,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     DrawerLayout drawer;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,14 +118,14 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showDialog();
+                showAddDialog();
             }
         });
 
         loadMenu();
     }
 
-    private void showDialog() {
+    private void showAddDialog() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(Home.this);
         alertDialog.setTitle("Add new Category");
         alertDialog.setMessage("Please fill full information");
@@ -255,17 +256,14 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 holder.txtMenuName.setText(model.getName());
                 Picasso.with(getApplicationContext()).load(model.getImage())
                         .into(holder.imageView);
-                holder.setItemClickListener(new ItemClickListener() {
-                    @Override
-                    public void onClick(View view, int position, boolean isLongClick) {
-                        // later
-                    }
-                });
+
                 final Category clickItem = model;
                 holder.setItemClickListener(new ItemClickListener() {
                     @Override
                     public void onClick(View view, int position, boolean isLongClick) {
-
+                        Intent foodList = new Intent(Home.this,FoodList.class);
+                        foodList.putExtra("CategoryId",adapter.getRef(position).getKey());
+                        startActivity(foodList);
                     }
                 });
             }
