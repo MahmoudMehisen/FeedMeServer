@@ -47,6 +47,7 @@ import javax.xml.transform.Result;
 import foodOreder.feedMeServer.Common.Common;
 import foodOreder.feedMeServer.Interface.ItemClickListener;
 import foodOreder.feedMeServer.Model.Category;
+import foodOreder.feedMeServer.Model.Order;
 import foodOreder.feedMeServer.ViewHolder.MenuViewHolder;
 import info.hoang8f.widget.FButton;
 
@@ -299,6 +300,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        if(id == R.id.nav_order){
+            Intent orders = new Intent(Home.this, OrderStatus.class);
+            startActivity(orders);
+        }
 
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
