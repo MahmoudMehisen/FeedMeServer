@@ -31,8 +31,12 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -48,6 +52,7 @@ import foodOreder.feedMeServer.Common.Common;
 import foodOreder.feedMeServer.Interface.ItemClickListener;
 import foodOreder.feedMeServer.Model.Category;
 import foodOreder.feedMeServer.Model.Order;
+import foodOreder.feedMeServer.Service.ListenOrder;
 import foodOreder.feedMeServer.ViewHolder.MenuViewHolder;
 import info.hoang8f.widget.FButton;
 
@@ -110,7 +115,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         txtFullName.setText(Common.CommonUser.getName());
 
 
-        //Load Menu
+        //Init View
         recycler_menu = (RecyclerView) findViewById(R.id.recycler_menu);
         recycler_menu.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
@@ -124,7 +129,13 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         });
 
         loadMenu();
+
+        //Call Service
+        Intent service = new Intent(Home.this, ListenOrder.class);
+        startService(service);
     }
+
+
 
     private void showAddDialog() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(Home.this);
@@ -328,6 +339,25 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     }
 
     private void deleteCategory(String key, Category item) {
+
+        //getting all food in category
+        DatabaseReference foods = database.getReference("Foods");
+        Query FoodInCategory = foods.orderByChild("menuID").equalTo(key);
+        FoodInCategory.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot postSnapShot:dataSnapshot.getChildren()){
+                    postSnapShot.getRef().removeValue();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
         category.child(key).removeValue();
         Toast.makeText(getApplicationContext(),"Category Deleted",Toast.LENGTH_SHORT).show();
     }
