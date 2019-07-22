@@ -1,6 +1,7 @@
 package foodOreder.feedMeServer;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -67,7 +68,7 @@ public class OrderStatus extends AppCompatActivity {
                 .build();
         adapter = new FirebaseRecyclerAdapter<Request, OrderViewHolder>(options) {
             @Override
-            protected void onBindViewHolder(@NonNull OrderViewHolder holder, int position, @NonNull Request model) {
+            protected void onBindViewHolder(@NonNull OrderViewHolder holder, int position, @NonNull final Request model) {
 
                 holder.orderId.setText(adapter.getRef(position).getKey());
                 holder.orderStatus.setText(convertCodeToStatus(model.getStatus()));
@@ -76,6 +77,9 @@ public class OrderStatus extends AppCompatActivity {
                 holder.setItemClickListener(new ItemClickListener() {
                     @Override
                     public void onClick(View view, int position, boolean isLongClick) {
+                        Intent trackingOrder = new Intent(OrderStatus.this,TrackingOrder.class);
+                        Common.currentRequest = model;
+                        startActivity(trackingOrder);
 
                     }
                 });
