@@ -12,39 +12,39 @@ import foodOreder.feedMeServer.Model.User;
 import foodOreder.feedMeServer.Remote.APIService;
 import foodOreder.feedMeServer.Remote.FCMRetrofitClient;
 import foodOreder.feedMeServer.Remote.IGeoCoordinates;
-import retrofit2.Retrofit;
 
 public class Common {
     public static User currentUser;
-    public final static String UPDATE ="Update";
-    public final static String DELETE ="Delete";
+    public final static String UPDATE = "Update";
+    public final static String DELETE = "Delete";
     public static Request currentRequest;
 
     private static final String BASE_URL = "https://fcm.googleapis.com/";
-    public static APIService getFCMService()
-    {
-    return FCMRetrofitClient.getClient(BASE_URL).create(APIService.class);
+
+    public static APIService getFCMService() {
+        return FCMRetrofitClient.getClient(BASE_URL).create(APIService.class);
     }
 
 
     public static final String baseUrl = "https://maps.googleapis.com";
 
-    public static IGeoCoordinates getGeoCodeService(){
-     return RetrofitClient.getClient(baseUrl).create(IGeoCoordinates.class);
+    public static IGeoCoordinates getGeoCodeService() {
+        return RetrofitClient.getClient(baseUrl).create(IGeoCoordinates.class);
     }
-    public static Bitmap scaleBitmap(Bitmap bitmap,int newWidth,int newHeight){
-        Bitmap scaledBitmap = Bitmap.createBitmap(newWidth,newHeight,Bitmap.Config.ARGB_8888);
 
-        float scaleX = newWidth/(float)bitmap.getWidth();
-        float scaleY = newHeight/(float)bitmap.getHeight();
+    public static Bitmap scaleBitmap(Bitmap bitmap, int newWidth, int newHeight) {
+        Bitmap scaledBitmap = Bitmap.createBitmap(newWidth, newHeight, Bitmap.Config.ARGB_8888);
 
-        float pivotX=0 , pivotY=0;
+        float scaleX = newWidth / (float) bitmap.getWidth();
+        float scaleY = newHeight / (float) bitmap.getHeight();
+
+        float pivotX = 0, pivotY = 0;
 
         Matrix scaleMatrix = new Matrix();
-        scaleMatrix.setScale(scaleX,scaleY,pivotX,pivotY);
-        Canvas canvas =new Canvas(scaledBitmap);
+        scaleMatrix.setScale(scaleX, scaleY, pivotX, pivotY);
+        Canvas canvas = new Canvas(scaledBitmap);
         canvas.setMatrix(scaleMatrix);
-        canvas.drawBitmap(bitmap,0,0, new Paint(Paint.FILTER_BITMAP_FLAG));
+        canvas.drawBitmap(bitmap, 0, 0, new Paint(Paint.FILTER_BITMAP_FLAG));
         return scaledBitmap;
 
 

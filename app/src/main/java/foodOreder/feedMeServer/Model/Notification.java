@@ -3,12 +3,12 @@ package foodOreder.feedMeServer.Model;
 public class Notification {
 
     public String body;
-    public String tilte;
+    public String title;
 
     public Notification(String body, String title)
     {
         this.body = body;
-        this.tilte = title;
+        this.title = title;
     }
 
     public Notification() {
@@ -22,11 +22,11 @@ public class Notification {
         this.body = body;
     }
 
-    public String getTilte() {
-        return tilte;
+    public String getTitle() {
+        return title;
     }
 
-    public void setTilte(String tilte) {
-        this.tilte = tilte;
+    public void setTitle(String title) {
+        this.title = title;
     }
 }
