@@ -77,10 +77,18 @@ public class OrderStatus extends AppCompatActivity {
                 holder.setItemClickListener(new ItemClickListener() {
                     @Override
                     public void onClick(View view, int position, boolean isLongClick) {
-                        Intent trackingOrder = new Intent(OrderStatus.this,TrackingOrder.class);
-                        Common.currentRequest = model;
-                        startActivity(trackingOrder);
+                        if(!isLongClick){
+                            Intent trackingOrder = new Intent(OrderStatus.this,TrackingOrder.class);
+                            Common.currentRequest = model;
+                            startActivity(trackingOrder);
+                        }
+                        else{
+                            Intent OrderDetail = new Intent(OrderStatus.this,OrderDetail.class);
+                            Common.currentRequest = model;
+                            OrderDetail.putExtra("OrderId", adapter.getRef(position).getKey());
+                            startActivity(OrderDetail);
 
+                        }
                     }
                 });
             }
