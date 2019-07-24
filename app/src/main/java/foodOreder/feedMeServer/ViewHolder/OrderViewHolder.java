@@ -11,7 +11,6 @@ import foodOreder.feedMeServer.Interface.ItemClickListener;
 import foodOreder.feedMeServer.R;
 
 public class OrderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
-        View.OnLongClickListener,
         View.OnCreateContextMenuListener {
 
     public TextView orderId,orderStatus,orderPhone,orderAddress;
@@ -29,7 +28,6 @@ public class OrderViewHolder extends RecyclerView.ViewHolder implements View.OnC
         orderStatus = (TextView) itemView.findViewById(R.id.orderStatus);
 
         itemView.setOnClickListener(this);
-        itemView.setOnLongClickListener(this);
         itemView.setOnCreateContextMenuListener(this);
     }
 
@@ -45,9 +43,4 @@ public class OrderViewHolder extends RecyclerView.ViewHolder implements View.OnC
         contextMenu.add(0,0,getAdapterPosition(), Common.DELETE);
     }
 
-    @Override
-    public boolean onLongClick(View view) {
-        itemClickListener.onClick(view, getAdapterPosition(), true);
-        return true;
-    }
 }

@@ -97,14 +97,14 @@ public class OrderStatus extends AppCompatActivity {
                             Intent trackingOrder = new Intent(OrderStatus.this,TrackingOrder.class);
                             Common.currentRequest = model;
                             startActivity(trackingOrder);
-                        }
+                        }/*
                         else{
                             Intent OrderDetail = new Intent(OrderStatus.this,OrderDetail.class);
                             Common.currentRequest = model;
                             OrderDetail.putExtra("OrderId", adapter.getRef(position).getKey());
                             startActivity(OrderDetail);
 
-                        }
+                        }*/
                     }
                 });
             }
