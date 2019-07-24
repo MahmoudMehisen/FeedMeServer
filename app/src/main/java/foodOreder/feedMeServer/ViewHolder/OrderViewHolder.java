@@ -10,7 +10,9 @@ import foodOreder.feedMeServer.Common.Common;
 import foodOreder.feedMeServer.Interface.ItemClickListener;
 import foodOreder.feedMeServer.R;
 
-public class OrderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnCreateContextMenuListener {
+public class OrderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
+        View.OnLongClickListener,
+        View.OnCreateContextMenuListener {
 
     public TextView orderId,orderStatus,orderPhone,orderAddress;
     private ItemClickListener itemClickListener;
@@ -27,13 +29,13 @@ public class OrderViewHolder extends RecyclerView.ViewHolder implements View.OnC
         orderStatus = (TextView) itemView.findViewById(R.id.orderStatus);
 
         itemView.setOnClickListener(this);
+        itemView.setOnLongClickListener(this);
         itemView.setOnCreateContextMenuListener(this);
     }
 
     @Override
     public void onClick(View view) {
         itemClickListener.onClick(view, getAdapterPosition(), false);
-
     }
 
     @Override
@@ -41,5 +43,11 @@ public class OrderViewHolder extends RecyclerView.ViewHolder implements View.OnC
         contextMenu.setHeaderTitle("Select the action");
         contextMenu.add(0,0,getAdapterPosition(), Common.UPDATE);
         contextMenu.add(0,0,getAdapterPosition(), Common.DELETE);
+    }
+
+    @Override
+    public boolean onLongClick(View view) {
+        itemClickListener.onClick(view, getAdapterPosition(), true);
+        return true;
     }
 }
