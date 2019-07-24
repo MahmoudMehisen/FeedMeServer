@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -14,11 +15,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,6 +36,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -46,13 +46,10 @@ import com.squareup.picasso.Picasso;
 
 import java.util.UUID;
 
-import javax.xml.transform.Result;
-
 import foodOreder.feedMeServer.Common.Common;
 import foodOreder.feedMeServer.Interface.ItemClickListener;
 import foodOreder.feedMeServer.Model.Category;
-import foodOreder.feedMeServer.Model.Order;
-import foodOreder.feedMeServer.Service.ListenOrder;
+import foodOreder.feedMeServer.Model.Token;
 import foodOreder.feedMeServer.ViewHolder.MenuViewHolder;
 import info.hoang8f.widget.FButton;
 
@@ -71,13 +68,12 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     FirebaseRecyclerOptions<Category> options;
 
     MaterialEditText edtName;
-    FButton btnUpload,btnSelect;
+    FButton btnUpload, btnSelect;
 
     Category newCategory;
     Uri saveUri;
-    private final int PICK_IMAGE_REQUEST=71;
+    private final int PICK_IMAGE_REQUEST = 71;
     DrawerLayout drawer;
-
 
 
     @Override
@@ -96,9 +92,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         storageReference = storage.getReference("images/");
 
 
-
-
-
         FloatingActionButton fab = findViewById(R.id.fab);
         drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -112,7 +105,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         //set name for user
         View headerView = navigationView.getHeaderView(0);
         txtFullName = (TextView) headerView.findViewById(R.id.txtFullName);
-        txtFullName.setText(Common.CommonUser.getName());
+        txtFullName.setText(Common.currentUser.getName());
 
 
         //Init View
@@ -130,11 +123,17 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         loadMenu();
 
-        //Call Service
-        Intent service = new Intent(Home.this, ListenOrder.class);
-        startService(service);
+        updateToken(FirebaseInstanceId.getInstance().getToken());
+
+
     }
 
+    private void updateToken(String token) {
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        DatabaseReference tokens = db.getReference("Tokens");
+        Token data = new Token(token,true);
+        tokens.child(Common.currentUser.getPhone()).setValue(data);
+    }
 
 
     private void showAddDialog() {
@@ -142,8 +141,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         alertDialog.setTitle("Add new Category");
         alertDialog.setMessage("Please fill full information");
 
-        LayoutInflater inflater  = this.getLayoutInflater();
-        View addMenuLayout = inflater.inflate(R.layout.add_new_menu_layout,null);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View addMenuLayout = inflater.inflate(R.layout.add_new_menu_layout, null);
 
         edtName = addMenuLayout.findViewById(R.id.editName);
         btnSelect = addMenuLayout.findViewById(R.id.btnSelect);
@@ -170,10 +169,9 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
-                if(newCategory !=null)
-                {
+                if (newCategory != null) {
                     category.push().setValue(newCategory);
-                    Snackbar.make(drawer,"New category "+newCategory.getName()+" was added",Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(drawer, "New category " + newCategory.getName() + " was added", Snackbar.LENGTH_SHORT).show();
                 }
 
             }
@@ -190,23 +188,22 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     }
 
     private void uploadImage() {
-        if(saveUri!=null)
-        {
+        if (saveUri != null) {
             final ProgressDialog mDilaog = new ProgressDialog(this);
             mDilaog.setMessage("Uploading...");
             mDilaog.show();
 
             String imageName = UUID.randomUUID().toString();
-            final StorageReference imageFolder = storageReference.child("images/"+imageName);
+            final StorageReference imageFolder = storageReference.child("images/" + imageName);
             imageFolder.putFile(saveUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     mDilaog.dismiss();
-                    Toast.makeText(Home.this,"Uploaded !!!",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Home.this, "Uploaded !!!", Toast.LENGTH_SHORT).show();
                     imageFolder.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
-                            newCategory =new Category(edtName.getText().toString(),uri.toString());
+                            newCategory = new Category(edtName.getText().toString(), uri.toString());
 
                         }
                     });
@@ -215,13 +212,13 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     mDilaog.dismiss();
-                    Toast.makeText(Home.this,""+e.getMessage(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Home.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                     double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                    mDilaog.setMessage("Uploaded "+progress+"%");
+                    mDilaog.setMessage("Uploaded " + progress + "%");
                 }
             });
         }
@@ -230,8 +227,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data !=null && data.getData()!=null )
-        {
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             saveUri = data.getData();
             btnSelect.setText("Image Selected");
 
@@ -244,7 +240,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent,"Select Picture"),PICK_IMAGE_REQUEST);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
 
 
     }
@@ -273,8 +269,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 holder.setItemClickListener(new ItemClickListener() {
                     @Override
                     public void onClick(View view, int position, boolean isLongClick) {
-                        Intent foodList = new Intent(Home.this,FoodList.class);
-                        foodList.putExtra("CategoryId",adapter.getRef(position).getKey());
+                        Intent foodList = new Intent(Home.this, FoodList.class);
+                        foodList.putExtra("CategoryId", adapter.getRef(position).getKey());
                         startActivity(foodList);
                     }
                 });
@@ -311,7 +307,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        if(id == R.id.nav_order){
+        if (id == R.id.nav_order) {
             Intent orders = new Intent(Home.this, OrderStatus.class);
             startActivity(orders);
         }
@@ -325,13 +321,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     @Override
     public boolean onContextItemSelected(MenuItem item) {
 
-        if(item.getTitle().equals(Common.UPDATE))
-        {
-            showUpdateDialog(adapter.getRef(item.getOrder()).getKey(),adapter.getItem(item.getOrder()));
-        }
-        else if(item.getTitle().equals(Common.DELETE))
-        {
-            deleteCategory(adapter.getRef(item.getOrder()).getKey(),adapter.getItem(item.getOrder()));
+        if (item.getTitle().equals(Common.UPDATE)) {
+            showUpdateDialog(adapter.getRef(item.getOrder()).getKey(), adapter.getItem(item.getOrder()));
+        } else if (item.getTitle().equals(Common.DELETE)) {
+            deleteCategory(adapter.getRef(item.getOrder()).getKey(), adapter.getItem(item.getOrder()));
         }
 
 
@@ -346,7 +339,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         FoodInCategory.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot postSnapShot:dataSnapshot.getChildren()){
+                for (DataSnapshot postSnapShot : dataSnapshot.getChildren()) {
                     postSnapShot.getRef().removeValue();
                 }
             }
@@ -359,7 +352,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
 
         category.child(key).removeValue();
-        Toast.makeText(getApplicationContext(),"Category Deleted",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Category Deleted", Toast.LENGTH_SHORT).show();
     }
 
     private void showUpdateDialog(final String key, final Category item) {
@@ -367,8 +360,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         alertDialog.setTitle("Update Category");
         alertDialog.setMessage("Please fill full information");
 
-        LayoutInflater inflater  = this.getLayoutInflater();
-        View addMenuLayout = inflater.inflate(R.layout.add_new_menu_layout,null);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View addMenuLayout = inflater.inflate(R.layout.add_new_menu_layout, null);
 
         edtName = addMenuLayout.findViewById(R.id.editName);
         btnSelect = addMenuLayout.findViewById(R.id.btnSelect);
@@ -398,7 +391,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 dialogInterface.dismiss();
                 item.setName(edtName.getText().toString());
                 category.child(key).setValue(item);
-                Toast.makeText(getApplicationContext(),"Category Updated",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Category Updated", Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -413,24 +406,23 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     }
 
     private void changeImage(final Category item) {
-        if(saveUri!=null)
-        {
+        if (saveUri != null) {
             final ProgressDialog mDilaog = new ProgressDialog(this);
             mDilaog.setMessage("Uploading...");
             mDilaog.show();
 
             String imageName = UUID.randomUUID().toString();
-            final StorageReference imageFolder = storageReference.child("images/"+imageName);
+            final StorageReference imageFolder = storageReference.child("images/" + imageName);
             imageFolder.putFile(saveUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     mDilaog.dismiss();
-                    Toast.makeText(Home.this,"Uploaded !!!",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Home.this, "Uploaded !!!", Toast.LENGTH_SHORT).show();
                     imageFolder.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
 
-                        item.setImage(uri.toString());
+                            item.setImage(uri.toString());
                         }
                     });
                 }
@@ -438,13 +430,13 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     mDilaog.dismiss();
-                    Toast.makeText(Home.this,""+e.getMessage(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Home.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                     double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                    mDilaog.setMessage("Uploaded "+progress+"%");
+                    mDilaog.setMessage("Uploaded " + progress + "%");
                 }
             });
         }

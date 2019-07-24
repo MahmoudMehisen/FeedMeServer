@@ -8,16 +8,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 
 import java.util.ArrayList;
@@ -25,8 +29,16 @@ import java.util.List;
 
 import foodOreder.feedMeServer.Common.Common;
 import foodOreder.feedMeServer.Interface.ItemClickListener;
+import foodOreder.feedMeServer.Model.MyResponse;
+import foodOreder.feedMeServer.Model.Notification;
 import foodOreder.feedMeServer.Model.Request;
+import foodOreder.feedMeServer.Model.Sender;
+import foodOreder.feedMeServer.Model.Token;
+import foodOreder.feedMeServer.Remote.APIService;
 import foodOreder.feedMeServer.ViewHolder.OrderViewHolder;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class OrderStatus extends AppCompatActivity {
 
@@ -41,10 +53,14 @@ public class OrderStatus extends AppCompatActivity {
 
     MaterialSpinner spinner ;
 
+    APIService mService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_status);
+
+        mService = Common.getFCMService();
 
         database = FirebaseDatabase.getInstance();
         requests = database.getReference("Requests");
@@ -152,6 +168,7 @@ public class OrderStatus extends AppCompatActivity {
 
                 item.setStatus(String.valueOf(spinner.getSelectedIndex()));
                 requests.child(localKey).setValue(item);
+                sendOrderStatusToUser(localKey,item);
             }
         });
         alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
@@ -162,5 +179,48 @@ public class OrderStatus extends AppCompatActivity {
         });
         alertDialog.show();
 
+    }
+
+    private void sendOrderStatusToUser(final String key,final Request item) {
+        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
+        tokens.orderByKey().equalTo(item.getPhone())
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        for(DataSnapshot postSnapShot:dataSnapshot.getChildren())
+                        {
+                            Token token = postSnapShot.getValue(Token.class);
+                            Notification notification = new Notification("Your Order "+key+" was updated","Feed Me Service");
+                            Sender content = new Sender(token.getToken(),notification);
+
+                            mService.sendNotification(content)
+                                    .enqueue(new Callback<MyResponse>() {
+                                        @Override
+                                        public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                                            if(response.body().success == 1)
+                                            {
+                                                Toast.makeText(getApplicationContext(),"Order was Updated !",Toast.LENGTH_SHORT).show();
+                                            }
+                                            else
+                                            {
+                                                Toast.makeText(getApplicationContext(),"Order was Updated but failed to send notification !",Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<MyResponse> call, Throwable t) {
+                                            Log.e("ERROR",t.getMessage());
+                                        }
+                                    });
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
     }
 }

@@ -67,7 +67,7 @@ public class SignIn extends AppCompatActivity implements ProgressGenerator.OnCom
                                     editPassword.setEnabled(false);
                                     editPhone.setEnabled(false);
                                     HomeIntent = new Intent(SignIn.this, Home.class);
-                                    Common.CommonUser = user;
+                                    Common.currentUser = user;
 
 
                                 } else {

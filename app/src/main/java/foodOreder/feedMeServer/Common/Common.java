@@ -9,14 +9,23 @@ import android.graphics.Paint;
 import foodOreder.feedMeServer.Interface.RetrofitClient;
 import foodOreder.feedMeServer.Model.Request;
 import foodOreder.feedMeServer.Model.User;
+import foodOreder.feedMeServer.Remote.APIService;
+import foodOreder.feedMeServer.Remote.FCMRetrofitClient;
 import foodOreder.feedMeServer.Remote.IGeoCoordinates;
 import retrofit2.Retrofit;
 
 public class Common {
-    public static User CommonUser;
+    public static User currentUser;
     public final static String UPDATE ="Update";
     public final static String DELETE ="Delete";
     public static Request currentRequest;
+
+    private static final String BASE_URL = "https://fcm.googleapis.com/";
+    public static APIService getFCMService()
+    {
+    return FCMRetrofitClient.getClient(BASE_URL).create(APIService.class);
+    }
+
 
     public static final String baseUrl = "https://maps.googleapis.com";
 
