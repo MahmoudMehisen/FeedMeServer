@@ -112,7 +112,7 @@ public class TrackingOrder extends FragmentActivity implements
                 mMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f));
 
 
-                drawRoute(yourLocation, Common.currentRequest.getAddress());
+                drawRoute(yourLocation, Common.currentRequest.getLat(),Common.currentRequest.getLng());
 
 
             } else {
@@ -121,51 +121,23 @@ public class TrackingOrder extends FragmentActivity implements
         }
     }
 
-    private void drawRoute(final LatLng yourLocation, String address) {
-        mService.getGeoCode(address).enqueue(new Callback<String>() {
+    private void drawRoute(final LatLng yourLocation, String lat, String lng) {
+
+        LatLng orderLocation = new LatLng(Double.parseDouble(lat), Double.parseDouble(lng));
+
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.box);
+        bitmap = Common.scaleBitmap(bitmap, 70, 70);
+        System.out.println(lat);
+        System.out.println(lng);
+
+        MarkerOptions marker = new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(bitmap)).title("Order of " + Common.currentRequest.getPhone()).position(orderLocation);
+
+        mMap.addMarker(marker);
+
+        mService.getDirections(yourLocation.latitude + "," + yourLocation.longitude, orderLocation.latitude + "," + orderLocation.longitude).enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                try {
-                    JSONObject jsonObject = new JSONObject(response.body());
-                    System.out.println(response.body());
-                    String lat = ((JSONArray) jsonObject.get("results"))
-                            .getJSONObject(0)
-                            .getJSONObject("geometry")
-                            .getJSONObject("location").get("lat").toString();
-
-                    String lng = ((JSONArray) jsonObject.get("results"))
-                            .getJSONObject(0)
-                            .getJSONObject("geometry")
-                            .getJSONObject("location").get("lng").toString();
-
-                    LatLng orderLocation = new LatLng(Double.parseDouble(lat), Double.parseDouble(lng));
-
-                    Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.box);
-                    bitmap = Common.scaleBitmap(bitmap, 70, 70);
-                    System.out.println(lat);
-                    System.out.println(lng);
-
-                    MarkerOptions marker = new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(bitmap)).title("Order of " + Common.currentRequest.getPhone()).position(orderLocation);
-
-                    mMap.addMarker(marker);
-
-                    mService.getDirections(yourLocation.latitude + "," + yourLocation.longitude, orderLocation.latitude + "," + orderLocation.longitude).enqueue(new Callback<String>() {
-                        @Override
-                        public void onResponse(Call<String> call, Response<String> response) {
-                            new ParserTask().execute(response.body().toString());
-                        }
-
-                        @Override
-                        public void onFailure(Call<String> call, Throwable t) {
-
-                        }
-                    });
-
-
-                } catch (JSONException e) {
-                    System.out.println(e.getMessage());
-
-                }
+                new ParserTask().execute(response.body().toString());
             }
 
             @Override

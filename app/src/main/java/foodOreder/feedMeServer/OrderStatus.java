@@ -89,7 +89,7 @@ public class OrderStatus extends AppCompatActivity {
                 holder.orderId.setText(adapter.getRef(position).getKey());
                 holder.orderStatus.setText(convertCodeToStatus(model.getStatus()));
                 holder.orderPhone.setText(model.getPhone());
-                holder.orderAddress.setText(model.getAddress());
+
 
                 //new event button
                 holder.btnEdit.setOnClickListener(new View.OnClickListener() {
