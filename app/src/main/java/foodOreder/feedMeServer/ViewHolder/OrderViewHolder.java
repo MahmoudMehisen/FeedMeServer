@@ -1,23 +1,22 @@
 package foodOreder.feedMeServer.ViewHolder;
 
+import android.app.AlertDialog;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import foodOreder.feedMeServer.Common.Common;
 import foodOreder.feedMeServer.Interface.ItemClickListener;
 import foodOreder.feedMeServer.R;
+import info.hoang8f.widget.FButton;
 
-public class OrderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
-        View.OnCreateContextMenuListener {
+public class OrderViewHolder extends RecyclerView.ViewHolder{
 
     public TextView orderId,orderStatus,orderPhone,orderAddress;
-    private ItemClickListener itemClickListener;
-    public void setItemClickListener(ItemClickListener itemClickListener) {
-        this.itemClickListener = itemClickListener;
-    }
+    public FButton btnEdit, btnRemove, btnDetails, btnDirection;
 
     public OrderViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -27,20 +26,10 @@ public class OrderViewHolder extends RecyclerView.ViewHolder implements View.OnC
         orderPhone = (TextView) itemView.findViewById(R.id.orderPhone);
         orderStatus = (TextView) itemView.findViewById(R.id.orderStatus);
 
-        itemView.setOnClickListener(this);
-        itemView.setOnCreateContextMenuListener(this);
-    }
 
-    @Override
-    public void onClick(View view) {
-        itemClickListener.onClick(view, getAdapterPosition(), false);
+        btnEdit = (FButton)itemView.findViewById(R.id.btnEdit);
+        btnRemove = (FButton)itemView.findViewById(R.id.btnRemove);
+        btnDetails = (FButton) itemView.findViewById(R.id.btnDetails);
+        btnDirection = (FButton)itemView.findViewById(R.id.btnDirection);
     }
-
-    @Override
-    public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
-        contextMenu.setHeaderTitle("Select the action");
-        contextMenu.add(0,0,getAdapterPosition(), Common.UPDATE);
-        contextMenu.add(0,0,getAdapterPosition(), Common.DELETE);
-    }
-
 }
