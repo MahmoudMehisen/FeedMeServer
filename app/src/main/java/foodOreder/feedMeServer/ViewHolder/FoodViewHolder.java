@@ -12,8 +12,7 @@ import foodOreder.feedMeServer.Interface.ItemClickListener;
 import foodOreder.feedMeServer.R;
 
 
-    public class FoodViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener ,View.OnCreateContextMenuListener{
-
+public class FoodViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener {
 
 
     public TextView foodName;
@@ -25,10 +24,11 @@ import foodOreder.feedMeServer.R;
     public void setItemClickListener(ItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
     }
+
     public FoodViewHolder(@NonNull View itemView) {
         super(itemView);
-        foodName = (TextView)itemView.findViewById(R.id.food_name);
-        foodImage =(ImageView)itemView.findViewById(R.id.food_image);
+        foodName = (TextView) itemView.findViewById(R.id.food_name);
+        foodImage = (ImageView) itemView.findViewById(R.id.food_image);
 
         itemView.setOnCreateContextMenuListener(this);
         itemView.setOnClickListener(this);
@@ -42,7 +42,8 @@ import foodOreder.feedMeServer.R;
     @Override
     public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
         contextMenu.setHeaderTitle("Select the action");
-        contextMenu.add(0,0,getAdapterPosition(), Common.UPDATE);
-        contextMenu.add(0,0,getAdapterPosition(), Common.DELETE);
+        contextMenu.add(0, 0, getAdapterPosition(), Common.UPDATE);
+        contextMenu.add(0, 0, getAdapterPosition(), Common.DELETE);
+        contextMenu.add(0, 0, getAdapterPosition(), Common.ADD_TO_BANNER);
     }
 }

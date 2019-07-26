@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -43,6 +44,7 @@ import java.util.UUID;
 
 import foodOreder.feedMeServer.Common.Common;
 import foodOreder.feedMeServer.Interface.ItemClickListener;
+import foodOreder.feedMeServer.Model.Banner;
 import foodOreder.feedMeServer.Model.Food;
 import foodOreder.feedMeServer.ViewHolder.FoodViewHolder;
 import info.hoang8f.widget.FButton;
@@ -57,6 +59,7 @@ public class FoodList extends AppCompatActivity {
 
     FirebaseDatabase database;
     DatabaseReference foodList;
+    DatabaseReference banner;
     String categoryId;
     FirebaseRecyclerOptions<Food> options;
     FirebaseRecyclerAdapter<Food, FoodViewHolder> adapter;
@@ -85,6 +88,7 @@ public class FoodList extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance();
         foodList = database.getReference("Foods");
+        banner = database.getReference("Banner");
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerFood);
         recyclerView.setHasFixedSize(true);
@@ -387,10 +391,24 @@ public class FoodList extends AppCompatActivity {
                 deleteFood(searchAdapter.getRef(item.getOrder()).getKey(), searchAdapter.getItem(item.getOrder()));
 
         }
+        else if(item.getTitle().equals(Common.ADD_TO_BANNER))
+        {
+            if (!searched)
+                addToBanner( adapter.getRef(item.getOrder()).getKey(), adapter.getItem(item.getOrder()));
+            else
+                addToBanner(searchAdapter.getRef(item.getOrder()).getKey(), searchAdapter.getItem(item.getOrder()));
+        }
 
 
         return super.onContextItemSelected(item);
     }
+
+    private void addToBanner(String key, Food item) {
+        Banner ban = new Banner(key,item.getName(),item.getImage());
+        banner.push().setValue(ban);
+        Toast.makeText(this,"Added to Banner",Toast.LENGTH_SHORT).show();
+    }
+
 
     private void deleteFood(String key, Food item) {
         foodList.child(key).removeValue();
