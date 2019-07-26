@@ -134,7 +134,7 @@ public class TrackingOrder extends FragmentActivity implements
 
         mMap.addMarker(marker);
 
-        mService.getDirections(yourLocation.latitude + "," + yourLocation.longitude, orderLocation.latitude + "," + orderLocation.longitude).enqueue(new Callback<String>() {
+        /*mService.getDirections(yourLocation.latitude + "," + yourLocation.longitude, orderLocation.latitude + "," + orderLocation.longitude).enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 new ParserTask().execute(response.body().toString());
@@ -144,7 +144,7 @@ public class TrackingOrder extends FragmentActivity implements
             public void onFailure(Call<String> call, Throwable t) {
 
             }
-        });
+        });*/
     }
 
     private void createLocationRequest() {
