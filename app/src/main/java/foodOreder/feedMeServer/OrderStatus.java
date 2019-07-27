@@ -10,7 +10,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -25,14 +24,14 @@ import com.google.firebase.database.ValueEventListener;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import foodOreder.feedMeServer.Common.Common;
-import foodOreder.feedMeServer.Interface.ItemClickListener;
+import foodOreder.feedMeServer.Model.DataMessage;
 import foodOreder.feedMeServer.Model.MyResponse;
-import foodOreder.feedMeServer.Model.Notification;
 import foodOreder.feedMeServer.Model.Request;
-import foodOreder.feedMeServer.Model.Sender;
 import foodOreder.feedMeServer.Model.Token;
 import foodOreder.feedMeServer.Remote.APIService;
 import foodOreder.feedMeServer.ViewHolder.OrderViewHolder;
@@ -203,10 +202,13 @@ public class OrderStatus extends AppCompatActivity {
                         for(DataSnapshot postSnapShot:dataSnapshot.getChildren())
                         {
                             Token token = postSnapShot.getValue(Token.class);
-                            Notification notification = new Notification("Your Order "+key+" was updated","Feed Me Service");
-                            Sender content = new Sender(token.getToken(),notification);
 
-                            mService.sendNotification(content)
+                            Map<String,String> dataSend = new HashMap<>();
+                            dataSend.put("title","Feed Me");
+                            dataSend.put("message","Your order "+key+" was updated");
+                            DataMessage dataMessage = new DataMessage(token.getToken(),dataSend);
+
+                            mService.sendNotification(dataMessage)
                                     .enqueue(new Callback<MyResponse>() {
                                         @Override
                                         public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {

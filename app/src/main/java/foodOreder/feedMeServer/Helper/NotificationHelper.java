@@ -56,4 +56,13 @@ public class NotificationHelper extends ContextWrapper {
                 .setSound(soundUri)
                 .setAutoCancel(false);
     }
+    @TargetApi(Build.VERSION_CODES.O)
+    public Notification.Builder getFeedMeChannelNotification(String title, String body, Uri soundUri){
+        return new Notification.Builder(getApplicationContext(),FEED_ME_CHANEL_ID)
+                .setContentTitle(title)
+                .setContentText(body)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSound(soundUri)
+                .setAutoCancel(false);
+    }
 }
