@@ -17,6 +17,7 @@ import foodOreder.feedMeServer.Remote.FCMRetrofitClient;
 import foodOreder.feedMeServer.Remote.IGeoCoordinates;
 
 public class Common {
+    public static final String SHIPPER_TABLE = "Shippers";
     public static User currentUser;
     public final static String UPDATE = "Update";
     public final static String DELETE = "Delete";
