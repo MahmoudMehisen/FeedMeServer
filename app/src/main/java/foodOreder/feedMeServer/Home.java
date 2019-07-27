@@ -322,6 +322,12 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             startActivity(sendMessage);
         }
 
+        else if(id == R.id.nav_shipper)
+        {
+            Intent shippers = new Intent(Home.this,ShipperManagement.class);
+            startActivity(shippers);
+        }
+
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

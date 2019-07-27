@@ -27,5 +27,6 @@
     <string name="order">Order</string>
     <string name="sign_out">Sign Out</string>
     <string name="title_activity_tracking_order">TrackingOrder</string>
+    <string name="shippers_management">Shippers Management</string>
 
 </resources>

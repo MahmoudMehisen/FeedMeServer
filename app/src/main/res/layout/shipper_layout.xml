@@ -26,66 +26,42 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="9"
-                android:orientation="vertical"
-
-
-                >
+                android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/orderId"
+                    android:id="@+id/shipper_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:gravity="center_vertical|start"
-                    android:text="#111111111"
+                    android:text="#SHIPPER NAME"
                     android:textAllCaps="true"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/order_date"
+                    android:id="@+id/shipper_phone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:gravity="center_vertical|start"
-                    android:text="#Order Date"
+                    android:text="#SHIPPER PHONE"
                     android:textAllCaps="true"
                     android:textStyle="italic" />
-
-
-
-                <TextView
-                    android:id="@+id/orderStatus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:gravity="center_vertical|start"
-                    android:text="Status"
-                    android:textAllCaps="true"
-                    android:textStyle="italic" />
-
-                <TextView
-                    android:id="@+id/orderPhone"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:gravity="center_vertical|start"
-                    android:text="123456"
-                    android:textAllCaps="true"
-                    android:textStyle="italic" />
-
-
-
             </LinearLayout>
 
 
         </LinearLayout>
+
+
+
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:padding="5dp"
-            android:weightSum="4"
+            android:weightSum="2"
             >
 
 
@@ -94,10 +70,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="Edit"
-
                 app:buttonColor="@android:color/white"
                 android:layout_weight="1"
-                />
+                android:layout_marginRight="10dp"/>
 
 
             <info.hoang8f.widget.FButton
@@ -106,30 +81,7 @@
                 android:layout_height="wrap_content"
                 android:text="Remove"
                 app:buttonColor="@android:color/white"
-                android:layout_weight="1"
-
-                />
-
-
-            <info.hoang8f.widget.FButton
-                android:id="@+id/btnDetails"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="Details"
-                android:layout_weight="1"
-                app:buttonColor="@android:color/white"
-                />
-
-            <info.hoang8f.widget.FButton
-                android:id="@+id/btnDirection"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="Direction"
-                app:buttonColor="@android:color/white"
-                android:layout_weight="1"
-                />
-
-
+                android:layout_weight="1"/>
 
         </LinearLayout>
 

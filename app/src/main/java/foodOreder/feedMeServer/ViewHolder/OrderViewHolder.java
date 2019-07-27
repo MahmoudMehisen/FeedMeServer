@@ -15,16 +15,16 @@ import info.hoang8f.widget.FButton;
 
 public class OrderViewHolder extends RecyclerView.ViewHolder{
 
-    public TextView orderId,orderStatus,orderPhone,orderAddress;
+    public TextView orderId,orderStatus,orderPhone, orderDate;
     public FButton btnEdit, btnRemove, btnDetails, btnDirection;
 
     public OrderViewHolder(@NonNull View itemView) {
         super(itemView);
 
         orderId = (TextView) itemView.findViewById(R.id.orderId);
-
         orderPhone = (TextView) itemView.findViewById(R.id.orderPhone);
         orderStatus = (TextView) itemView.findViewById(R.id.orderStatus);
+        orderDate = (TextView) itemView.findViewById(R.id.order_date);
 
 
         btnEdit = (FButton)itemView.findViewById(R.id.btnEdit);
