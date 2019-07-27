@@ -6,6 +6,9 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 
+import java.util.Calendar;
+import java.util.Locale;
+
 import foodOreder.feedMeServer.Interface.RetrofitClient;
 import foodOreder.feedMeServer.Model.Request;
 import foodOreder.feedMeServer.Model.User;
@@ -48,6 +51,17 @@ public class Common {
         canvas.drawBitmap(bitmap, 0, 0, new Paint(Paint.FILTER_BITMAP_FLAG));
         return scaledBitmap;
 
+
+    }
+
+
+    public static String getDate(long time){
+        Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
+        calendar.setTimeInMillis(time);
+        StringBuilder date = new StringBuilder(
+                android.text.format.DateFormat.format("dd-MM-yyyy HH:mm", calendar).toString());
+
+        return date.toString();
 
     }
 
