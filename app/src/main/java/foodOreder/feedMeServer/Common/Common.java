@@ -17,6 +17,7 @@ public class Common {
     public static User currentUser;
     public final static String UPDATE = "Update";
     public final static String DELETE = "Delete";
+    public static String topicName ="News";
     public final static String ADD_TO_BANNER = "Add To BannerActivity";
     public static Request currentRequest;
 
