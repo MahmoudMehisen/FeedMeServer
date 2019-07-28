@@ -240,8 +240,8 @@ public class OrderStatus extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                        for (DataSnapshot postSnapShot : dataSnapshot.getChildren()) {
-                            Token token = postSnapShot.getValue(Token.class);
+                        if(dataSnapshot.exists()) {
+                            Token token = dataSnapshot.getValue(Token.class);
 
                             Map<String, String> dataSend = new HashMap<>();
                             dataSend.put("title", "Feed Me");
@@ -264,8 +264,8 @@ public class OrderStatus extends AppCompatActivity {
                                             Log.e("ERROR", t.getMessage());
                                         }
                                     });
-
                         }
+
                     }
 
                     @Override
@@ -277,13 +277,12 @@ public class OrderStatus extends AppCompatActivity {
 
     private void sendOrderStatusToUser(final String key, final Request item) {
         DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
-        tokens.orderByKey().equalTo(item.getPhone())
+        tokens.child(item.getPhone())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                        for (DataSnapshot postSnapShot : dataSnapshot.getChildren()) {
-                            Token token = postSnapShot.getValue(Token.class);
+                        if(dataSnapshot.exists()){
+                            Token token = dataSnapshot.getValue(Token.class);
 
                             Map<String, String> dataSend = new HashMap<>();
                             dataSend.put("title", "Feed Me");

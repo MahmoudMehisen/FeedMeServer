@@ -77,22 +77,40 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         String title = data.get("title");
         String message = data.get("message");
 
+        if(Common.currentUser != null){
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_ONE_SHOT);
+            Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_ONE_SHOT);
-        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            Notification.Builder builder = new Notification.Builder(this)
+                    .setSmallIcon(R.mipmap.ic_launcher_round)
+                    .setContentTitle(title)
+                    .setContentText(message)
+                    .setAutoCancel(true)
+                    .setSound(defaultSoundUri)
+                    .setContentIntent(pendingIntent);
 
-        Notification.Builder builder = new Notification.Builder(this)
-                .setSmallIcon(R.mipmap.ic_launcher_round)
-                .setContentTitle(title)
-                .setContentText(message)
-                .setAutoCancel(true)
-                .setSound(defaultSoundUri)
-                .setContentIntent(pendingIntent);
+            NotificationManager noti = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            noti.notify(0,builder.build());
+        }
+        else{
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_ONE_SHOT);
+            Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
-        NotificationManager noti = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        noti.notify(0,builder.build());
+            Notification.Builder builder = new Notification.Builder(this)
+                    .setSmallIcon(R.mipmap.ic_launcher_round)
+                    .setContentTitle(title)
+                    .setContentText(message)
+                    .setAutoCancel(true)
+                    .setSound(defaultSoundUri)
+                    .setContentIntent(pendingIntent);
+
+            NotificationManager noti = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            noti.notify(0,builder.build());
+        }
 
     }
 }
