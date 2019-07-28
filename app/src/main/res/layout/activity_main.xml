@@ -46,7 +46,7 @@
             android:layout_height="60dp"
             android:layout_margin="8dp"
             android:layout_weight="4"
-            android:text="Sing In"
+            android:text="Sign In"
             android:textColor="@color/colorIcon"
             />
 
