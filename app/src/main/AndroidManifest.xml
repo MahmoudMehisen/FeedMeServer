@@ -21,7 +21,6 @@
         <activity android:name=".SendMessage"></activity>
         <activity android:name=".BannerActivity" />
         <activity android:name=".ShipperManagement"></activity>
-        <activity android:name=".BannerActivity" />
         <activity android:name=".OrderDetail" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

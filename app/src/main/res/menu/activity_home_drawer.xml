@@ -30,7 +30,7 @@
         <item
             android:id="@+id/nav_shipper"
             android:icon="@drawable/ic_local_shipping_black_24dp"
-            android:title="@string/shippers_management"
+            android:title="Shipper"
             android:iconTint="@android:color/white"/>
 
 
