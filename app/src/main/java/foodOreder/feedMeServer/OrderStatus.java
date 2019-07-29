@@ -1,7 +1,10 @@
 package foodOreder.feedMeServer;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.LocationManager;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -73,8 +76,20 @@ public class OrderStatus extends AppCompatActivity {
 
 
         loadOrders();
+        turnGPSOn();
 
 
+    }
+    private void turnGPSOn(){
+
+        LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE );
+        boolean statusOfGPS = manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+        if(!statusOfGPS) {
+            Toast.makeText(getApplicationContext(),"Open Gps to get Your location",Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(intent);
+        }
     }
 
     private void loadOrders() {
