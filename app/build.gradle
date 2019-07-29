@@ -62,4 +62,7 @@ dependencies {
     implementation 'com.rengwuxian.materialedittext:library:2.1.4'
     // button loading
     implementation 'com.github.dmytrodanylyk.android-process-button:library:1.0.4'
+    //glide
+    implementation 'com.github.bumptech.glide:glide:4.9.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
 }

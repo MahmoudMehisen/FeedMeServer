@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -36,7 +37,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.mancj.materialsearchbar.MaterialSearchBar;
 import com.rengwuxian.materialedittext.MaterialEditText;
-import com.squareup.picasso.Picasso;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -290,7 +291,7 @@ public class FoodList extends AppCompatActivity {
             protected void onBindViewHolder(@NonNull FoodViewHolder holder, int position, @NonNull Food model) {
 
                 holder.foodName.setText(model.getName());
-                Picasso.with(getApplicationContext()).load(model.getImage()).into(holder.foodImage);
+                Glide.with(getApplicationContext()).load(model.getImage()).centerCrop().placeholder(R.drawable.placeholder).into(holder.foodImage);
 
                 final Food food = model;
                 //System.out.println(food.getName());
@@ -348,7 +349,7 @@ public class FoodList extends AppCompatActivity {
             protected void onBindViewHolder(@NonNull FoodViewHolder holder, int position, @NonNull Food model) {
 
                 holder.foodName.setText(model.getName());
-                Picasso.with(getApplicationContext()).load(model.getImage()).into(holder.foodImage);
+                Glide.with(getApplicationContext()).load(model.getImage()).centerCrop().placeholder(R.drawable.placeholder).into(holder.foodImage);
 
                 final Food food = model;
                 //System.out.println(food.getName());

@@ -26,6 +26,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -262,7 +263,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             @Override
             protected void onBindViewHolder(@NonNull MenuViewHolder holder, int position, @NonNull Category model) {
                 holder.txtMenuName.setText(model.getName());
-                Picasso.with(getApplicationContext()).load(model.getImage())
+                Glide.with(getApplicationContext()).load(model.getImage()).centerCrop().placeholder(R.drawable.placeholder)
                         .into(holder.imageView);
 
                 final Category clickItem = model;
