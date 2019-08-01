@@ -186,7 +186,7 @@ public class FoodList extends AppCompatActivity {
                     imageFolder.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
-                            newFood = new Food(edtName.getText().toString(), uri.toString(), edtDescription.getText().toString(), edtDescription.getText().toString(), edtDiscount.getText().toString(), categoryId);
+                            newFood = new Food(edtName.getText().toString(), uri.toString(), edtDescription.getText().toString(), edtPrice.getText().toString(), edtDiscount.getText().toString(), categoryId);
 
                         }
                     });
