@@ -59,7 +59,7 @@ public class SendMessage extends AppCompatActivity {
                                 for(DataSnapshot postSnapShot:dataSnapshot.getChildren())
                                 {
                                     Token token = postSnapShot.getValue(Token.class);
-
+                                    System.out.println("HHHHHHHHHHHHH");
                                     Map<String,String> dataSend = new HashMap<>();
                                     dataSend.put("title",edtTitle.getText().toString());
                                     dataSend.put("message",edtMessage.getText().toString());
